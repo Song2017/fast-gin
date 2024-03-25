@@ -1,0 +1,827 @@
+openapi: 3.0.3
+info:
+  title: Order Service
+  description: Services that provides the capabilities for orders and Odoo
+  version: '1.0'
+servers:
+  - url: http://localhost:9000
+    description: Inferred Url
+tags:
+  - name: Order APIs
+    description: Internal Order Controller
+  - name: odoo-controller
+    description: Odoo Controller
+paths:
+  /order/v1/internal/ranger/create:
+    post:
+      tags:
+        - Order APIs
+      summary: createRangerOrder
+      operationId: createRangerOrderUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RangerCreateOrderCommand'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseOfOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+      security:
+        - Authorization:
+            - global
+  /order/ship/{carrier}:
+    post:
+      tags:
+        - odoo-controller
+      summary: createShip
+      operationId: createShipUsingPOST
+      parameters:
+        - name: carrier
+          in: path
+          description: carrier
+          required: true
+          style: simple
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OdooCreateShipCommand'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PilotResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+      security:
+        - Authorization:
+            - global
+  /order/{storeId}:
+    get:
+      tags:
+        - odoo-controller
+      summary: odoo
+      operationId: odooUsingGET
+      parameters:
+        - name: storeId
+          in: path
+          description: storeId
+          required: true
+          style: simple
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: type
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: status
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: order_id
+          in: query
+          description: order_id
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: client_order_ref
+          in: query
+          description: client_order_ref
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: combine_orders
+          in: query
+          description: combine_orders
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: created_range
+          in: query
+          description: created_range
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: updated_range
+          in: query
+          description: updated_range
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: page_no
+          in: query
+          description: page_no
+          required: false
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: page_size
+          in: query
+          description: page_size
+          required: false
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OdooResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+      security:
+        - Authorization:
+            - global
+components:
+  schemas:
+    BaseResponse:
+      title: BaseResponse
+      type: object
+      properties:
+        code:
+          type: integer
+          description: code 200/500
+          format: int32
+        data:
+          type: object
+          description: wrapped data
+        msg:
+          type: string
+          description: error message
+        traceId:
+          type: string
+      description: Common Response payload
+    BaseResponseOfOrder:
+      title: BaseResponseOfOrder
+      type: object
+      properties:
+        code:
+          type: integer
+          description: code 200/500
+          format: int32
+        data:
+          $ref: '#/components/schemas/Order'
+        msg:
+          type: string
+          description: error message
+        traceId:
+          type: string
+      description: Common Response payload
+    Customer:
+      title: Customer
+      type: object
+      properties:
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        countryCode:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+    Dimension:
+      title: Dimension
+      type: object
+      properties:
+        height:
+          type: number
+          format: double
+        length:
+          type: number
+          format: double
+        weight:
+          type: number
+          format: double
+        width:
+          type: number
+          format: double
+    EnvoyItemDTO:
+      title: EnvoyItemDTO
+      type: object
+      properties:
+        barcode:
+          type: string
+        brand:
+          type: string
+        countryOfOrigin:
+          type: string
+        customsFilingId:
+          type: string
+        customsUnitCode:
+          type: string
+        customsUnitCodePackage:
+          type: string
+        customsUnitCodeWeight:
+          type: string
+        declarationElements:
+          type: string
+        grossWeight:
+          type: number
+          format: double
+        hsCode:
+          type: string
+        ingredients:
+          type: string
+        model:
+          type: string
+        name:
+          type: string
+        nameCn:
+          type: string
+        netWeight:
+          type: number
+          format: double
+        price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+          format: int32
+        quantityUom:
+          type: string
+        skuNumber:
+          type: string
+        spec:
+          type: string
+        tax:
+          type: number
+          format: double
+    Item:
+      title: Item
+      type: object
+      properties:
+        discount:
+          type: object
+        price:
+          type: number
+          format: double
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity:
+          type: integer
+          format: int32
+        tax:
+          type: object
+    LoadData:
+      title: LoadData
+      type: object
+      properties:
+        deliverySlipUrl:
+          type: string
+        deliveryStatus:
+          type: string
+        domesticDeliveryCompany:
+          type: string
+        trackingReference:
+          type: string
+        trackingUrl:
+          type: string
+        waybillId:
+          type: string
+    OdooCreateShipCommand:
+      title: OdooCreateShipCommand
+      type: object
+      properties:
+        dimension:
+          $ref: '#/components/schemas/Dimension'
+        expressCompany:
+          type: string
+        grossWeight:
+          type: number
+          format: double
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvoyItemDTO'
+        merchantOrderRef:
+          type: string
+        netWeight:
+          type: number
+          format: double
+        orderRef:
+          type: string
+        orderTime:
+          type: string
+        sellerOrderRef:
+          type: string
+        trackingReference:
+          type: string
+    OdooResponse:
+      title: OdooResponse
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        connectorResponses:
+          type: array
+          items:
+            type: object
+        data:
+          $ref: '#/components/schemas/DataPayload'
+        message:
+          type: string
+        responseTime:
+          type: integer
+          format: int32
+    DataPayload:
+      title: DataPayload
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/OdooOrderDTO'
+    OdooOrderDTO:
+      title: OdooOrderDTO
+      type: object
+      properties:
+        clientOrderRef:
+          type: string
+        clientParentOrderRef:
+          type: object
+        createdAt:
+          type: string
+        currency:
+          type: string
+        customer:
+          type: object
+        customerIdRef:
+          type: object
+        customerNote:
+          type: object
+        customsCode:
+          type: string
+        customsFilingId:
+          type: object
+        deliverySlipUrl:
+          type: object
+        destinationCode:
+          type: object
+        distributorName:
+          type: object
+        expressCompany:
+          type: object
+        expressType:
+          type: object
+        insuranceFee:
+          type: object
+        isDistributionOrder:
+          type: boolean
+        isSubOrder:
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        nodeCode:
+          type: object
+        nonCashDeductionAmount:
+          type: object
+        orderId:
+          type: object
+        orderType:
+          type: string
+        paidAt:
+          type: object
+        payAmount:
+          type: number
+          format: double
+        payCustomsNo:
+          type: object
+        payId:
+          type: object
+        payMerchantName:
+          type: object
+        payMethod:
+          type: object
+        payer:
+          type: object
+        paymentPayId:
+          type: object
+        platformName:
+          type: string
+        platformTransactionId:
+          type: object
+        productsTotalTax:
+          type: number
+          format: double
+        seller:
+          type: object
+        shippingCost:
+          type: object
+        status:
+          type: string
+        trackingReference:
+          type: object
+        updatedAt:
+          type: string
+    Order:
+      title: Order
+      type: object
+      properties:
+        addressId:
+          type: integer
+          format: int32
+        areaId:
+          type: integer
+          format: int32
+        campaignId:
+          type: integer
+          format: int32
+        campaignTrackingData:
+          type: string
+        cancelUrl:
+          type: string
+        cartId:
+          type: string
+        comment:
+          type: string
+        couponInstanceId:
+          type: integer
+          format: int64
+        createTimestamp:
+          type: string
+        currency:
+          type: string
+        customsClearanceType:
+          type: string
+        declareUserName:
+          type: string
+        deliveryAddress:
+          type: string
+        deliveryCarrierId:
+          type: string
+        deliveryEmail:
+          type: string
+        deliveryExpressCompany:
+          type: string
+        deliveryPhone:
+          type: string
+        deliveryPhoneCountryCode:
+          type: string
+        deliveryUserIdCard:
+          type: string
+        deliveryUserName:
+          type: string
+        deliveryWaybillId:
+          type: string
+        discount:
+          type: integer
+          format: int32
+        discountCode:
+          type: string
+        id:
+          type: string
+        notifyUrl:
+          type: string
+        outerOrderId:
+          type: string
+        outerUserId:
+          type: string
+        paidTimestamp:
+          type: string
+        parentOrderId:
+          type: string
+        platform:
+          type: string
+        productTax:
+          type: integer
+          format: int32
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDTO'
+        shippingFee:
+          type: integer
+          format: int32
+        shippingTax:
+          type: integer
+          format: int32
+        status:
+          type: integer
+          format: int32
+        storeId:
+          type: string
+        successRedirectUrl:
+          type: string
+        tax:
+          type: integer
+          format: int32
+        total:
+          type: integer
+          format: int32
+        totalProductAmount:
+          type: integer
+          format: int32
+        updateTimestamp:
+          type: string
+        userId:
+          type: string
+    Payer:
+      title: Payer
+      type: object
+      properties:
+        chineseId:
+          type: string
+        country:
+          type: string
+        countryCode:
+          type: string
+        firstName:
+          type: string
+        tin:
+          type: string
+    PilotResponse:
+      title: PilotResponse
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        data:
+          $ref: '#/components/schemas/LoadData'
+        errorMessage:
+          type: string
+        message:
+          type: string
+    Product:
+      title: Product
+      type: object
+      properties:
+        barcode:
+          type: string
+        brand:
+          type: string
+        category:
+          type: object
+        categoryId:
+          type: object
+        country:
+          type: object
+        createdAt:
+          type: object
+        currency:
+          type: string
+        description:
+          type: object
+        discount:
+          type: object
+        expressType:
+          type: object
+        grossWeight:
+          type: object
+        groupBuyingPrice:
+          type: object
+        hsCode:
+          type: object
+        images:
+          type: object
+        ingredient:
+          type: object
+        isOnsale:
+          type: object
+        logisticsMode:
+          type: object
+        massUnit:
+          type: string
+        model:
+          type: object
+        name:
+          type: object
+        nameEn:
+          type: object
+        netWeight:
+          type: object
+        personalPostalArticlesTax:
+          type: object
+        price:
+          type: object
+        productId:
+          type: string
+        rrp:
+          type: object
+        shelfLife:
+          type: object
+        shippingCost:
+          type: object
+        shippingTime:
+          type: object
+        skus:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sku'
+        spec:
+          type: object
+        status:
+          type: string
+        storeId:
+          type: object
+        taxRate:
+          type: object
+        timeUnit:
+          type: object
+        updatedAt:
+          type: object
+        vendor:
+          type: object
+        warrantyPeriod:
+          type: integer
+          format: int32
+    ProductDTO:
+      title: ProductDTO
+      type: object
+      properties:
+        barcode:
+          type: string
+        currency:
+          type: string
+        discount:
+          type: integer
+          format: int32
+        imageUrl:
+          type: string
+        outerProductId:
+          type: string
+        outerSkuId:
+          type: string
+        price:
+          type: integer
+          format: int32
+        productId:
+          type: string
+        productName:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        rrp:
+          type: integer
+          format: int32
+        skuId:
+          type: string
+        spec:
+          type: string
+        tax:
+          type: integer
+          format: int32
+        taxRate:
+          type: number
+          format: double
+    RangerCreateOrderCommand:
+      title: RangerCreateOrderCommand
+      type: object
+      properties:
+        clientOrderRef:
+          type: string
+        clientParentOrderRef:
+          type: string
+        createdAt:
+          type: string
+        currency:
+          type: string
+        customer:
+          $ref: '#/components/schemas/Customer'
+        customerIdRef:
+          type: string
+        customsCode:
+          type: string
+        deliveryWaybillError:
+          type: string
+        deliveryWaybillId:
+          type: string
+        distributorName:
+          type: string
+        expressCompany:
+          type: string
+        expressType:
+          type: string
+        isDistributionOrder:
+          type: boolean
+        isSubOrder:
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        nonCashDeductionAmount:
+          type: number
+          format: double
+        orderType:
+          type: string
+        paidAt:
+          type: string
+        payAmount:
+          type: number
+          format: double
+        payId:
+          type: string
+        payMerchantName:
+          type: string
+        payMethod:
+          type: string
+        payer:
+          $ref: '#/components/schemas/Payer'
+        paymentPayId:
+          type: string
+        platformName:
+          type: string
+        platformTransactionId:
+          type: string
+        shippingCost:
+          type: number
+          format: double
+        shippingTax:
+          type: number
+          format: double
+        status:
+          type: string
+        storeId:
+          type: string
+        totalTax:
+          type: number
+          format: double
+        updatedAt:
+          type: string
+    Sku:
+      title: Sku
+      type: object
+      properties:
+        barcode:
+          type: string
+        skuNumber:
+          type: string
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      name: Authorization
+      in: header

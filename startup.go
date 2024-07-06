@@ -1,7 +1,7 @@
 package startup
 
 import (
-	_init "startup/initial"
+	_init "github.com/Song2017/startup/initial"
 
 	"github.com/gin-gonic/gin"
 )

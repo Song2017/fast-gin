@@ -3,8 +3,9 @@ package initial
 import (
 	"encoding/json"
 	"os"
-	_pkg "startup/_startup/_pkg"
 	"sync"
+
+	_pkg "github.com/Song2017/startup/_startup/_pkg"
 )
 
 var (

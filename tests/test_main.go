@@ -3,8 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
-	_init "startup/initial"
-	_middleware "startup/middleware"
+
+	_init "github.com/Song2017/startup/initial"
+	_middleware "github.com/Song2017/startup/middleware"
 
 	"github.com/gin-gonic/gin"
 )

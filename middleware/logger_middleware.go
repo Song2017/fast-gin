@@ -7,7 +7,7 @@ import (
 	"io"
 	"time"
 
-	_pkg "startup/_startup/_pkg"
+	_pkg "github.com/Song2017/startup/_startup/_pkg"
 
 	"github.com/gin-gonic/gin"
 )

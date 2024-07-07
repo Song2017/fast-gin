@@ -1,18 +1,10 @@
 # Taste Gin
 This is a quick start based on Gin.
-
-## Init Golang Package
-```
-go mod init startup
-export GOPROXY=https://goproxy.io
-go mod tidy
-
-dlv debug server/main.go
-b path:line
-```
+1. swagger gen example codes
+2. run Gin server with packages and middlewares
 
 ## Guide
-1. modify ./resources/demo.yaml
+1. modify ./resources/openapi.yaml
 2. bin/gen_swagger_server.sh
 3. source bin/configuration.sh
 4. bin/run_gin_swagger.sh # go run tests/main.go
@@ -20,7 +12,7 @@ b path:line
 
 
 ## Object hierarchy
-- main.go: entry
+- example: tests/test_main/main.go
 ### request flow
 - api: Swagger groups
 - service: HTTP path and function 
@@ -34,3 +26,14 @@ api -- service -- domain -- po -- db
 - init: load OS env and prepare
 - pkg: extension methods
 - remote: remote services
+
+
+## Init Golang Package
+```
+go mod init github.com/Song2017/startup
+go mod tidy
+export GOPROXY=https://goproxy.io
+
+dlv debug server/main.go
+b path:line
+```

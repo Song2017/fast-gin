@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	pkg "github.com/Song2017/startup/_startup/_pkg"
+	pkg "github.com/Song2017/startup/pkg"
 )
 
 func main2() {

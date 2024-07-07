@@ -5,7 +5,7 @@ import (
 	"os"
 	"sync"
 
-	_pkg "github.com/Song2017/startup/_startup/_pkg"
+	_pkg "github.com/Song2017/startup/pkg"
 )
 
 var (

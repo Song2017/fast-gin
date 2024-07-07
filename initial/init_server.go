@@ -27,7 +27,7 @@ func InitSwagger(router *gin.Engine, staticPath string) *gin.Engine {
 	return router
 }
 
-func InitRouter(router *gin.Engine) *gin.Engine {
+func InitBaseRouter(router *gin.Engine) *gin.Engine {
 	if router == nil {
 		router = gin.New()
 	}

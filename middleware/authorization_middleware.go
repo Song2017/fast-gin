@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	_pkg "github.com/Song2017/startup/_startup/_pkg"
+	_pkg "github.com/Song2017/startup/pkg"
 
 	"github.com/gin-gonic/gin"
 )

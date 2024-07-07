@@ -43,7 +43,7 @@ func addRoutes(router *gin.Engine) {
 func main() {
 	// init_project.InitProjectConfig()
 	_init.InitServerConfig()
-	router := _init.InitRouter(nil)
+	router := _init.InitBaseRouter(nil)
 	_init.InitSwagger(router, "./resources")
 
 	addRoutes(router)

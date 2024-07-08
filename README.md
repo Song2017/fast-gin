@@ -10,6 +10,8 @@ This is a quick start based on Gin.
 4. bin/run_gin_swagger.sh # go run tests/main.go
 5. access swagger: http://localhost:9000/swagger/index.html
 
+## Todos
+1. upgrade shell scripts
 
 ## Object hierarchy
 - example: tests/test_main/main.go
